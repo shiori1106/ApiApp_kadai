@@ -4,6 +4,7 @@ import android.content.Context
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,6 +12,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.Gson
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_api.*
 import okhttp3.*
 import okhttp3.logging.HttpLoggingInterceptor
@@ -134,15 +136,24 @@ class ApiFragment: Fragment() {
             page = 0
         }
         val start = page * COUNT + 1
+
         // URLを作成
+        var keyword_kensaku = "ランチ" // 初期値はランチ
+
+        if (editTextKeyword.text.toString() != null) {
+            keyword_kensaku = editTextKeyword.text.toString()
+        }
+
         val url = StringBuilder()
             .append(getString(R.string.base_url)) // https://webservice.recruit.co.jp/hotpepper/gourmet/v1/
             .append("?key=").append(getString(R.string.api_key)) // Apiを使うためのApikey
             .append("&start=").append(1) // 何件目からデータを取得するか
             .append("&count=").append(COUNT) // 1回で20件取得する
-            .append("&keyword=").append(getString(R.string.api_keyword)) // お店の検索ワード。ここでは「ランチ」を検索
+            .append("&keyword=").append(getString(R.string.api_keyword)) // お店の検索ワード。
+            //.append("&keyword=").append(keyword_kensaku) // 入力した検索ワードを適用
             .append("&format=json") // ここで利用しているAPIは戻りの形をxmlかjsonか選択することができる。Androidで扱う場合はxmlよりもjsonの方が扱いやすいので、jsonを選択
             .toString()
+
 
         // Http通信を行う本体
         val client = OkHttpClient.Builder()

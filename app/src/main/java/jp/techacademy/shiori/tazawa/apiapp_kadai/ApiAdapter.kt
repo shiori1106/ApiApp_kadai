@@ -1,6 +1,7 @@
 package jp.techacademy.shiori.tazawa.apiapp_kadai
 
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -97,7 +98,6 @@ class ApiAdapter(private val context: Context):RecyclerView.Adapter<RecyclerView
             rootView.apply {
 
                 setOnClickListener {
-                    //onClickItem?.invoke(if (data.couponUrls.sp.isNotEmpty()) data.couponUrls.sp else data.couponUrls.pc, isFavorite)
                     onClickItem?.invoke(if (data.couponUrls.sp.isNotEmpty()) data.couponUrls.sp else data.couponUrls.pc, data.id, data.name, data.address, data.logoImage)
                 }
 

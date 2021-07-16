@@ -1,6 +1,7 @@
 package jp.techacademy.shiori.tazawa.apiapp_kadai
 
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,9 +20,7 @@ class FavoriteAdapter(private val context: Context): RecyclerView.Adapter<Recycl
     var onClickDeleteFavorite: ((FavoriteShop) -> Unit)? = null
 
     // Itemを押したときのメソッド
-    //var onClickItem: ((String, Boolean) -> Unit)? = null
     var onClickItem: ((String, String, String, String, String) -> Unit)? = null
-    //var onClickItem: ((String, Shop) -> Unit)? = null
 
     // 更新用のメソッド
     fun refresh(list: List<FavoriteShop>){
@@ -68,7 +67,6 @@ class FavoriteAdapter(private val context: Context): RecyclerView.Adapter<Recycl
             rootView.apply {
 
                 setOnClickListener {
-                    //onClickItem?.invoke(data.url,true) // お気に入りのものしか表示されていないため
                     onClickItem?.invoke(data.url, data.id, data.name, data.address, data.imageUrl)
                 }
             }
@@ -77,7 +75,9 @@ class FavoriteAdapter(private val context: Context): RecyclerView.Adapter<Recycl
             // Picassoというライブラリを使ってImageVIewに画像をはめ込む
             Picasso.get().load(data.imageUrl).into(imageView)
             favoriteImageView.setOnClickListener {
+                Log.d("kotlintest_before",data.default_flag.toString())
                 onClickDeleteFavorite?.invoke(data)
+                Log.d("kotlintest_after",data.default_flag.toString())
                 notifyItemChanged(position)
             }
         }

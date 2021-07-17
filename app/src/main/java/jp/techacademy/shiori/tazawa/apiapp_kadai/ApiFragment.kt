@@ -124,7 +124,8 @@ class ApiFragment: Fragment() {
     }
 
     // API通信を行い、データを取得するメソッド
-    private fun updateData(isAdd: Boolean = false){
+    //private fun updateData(isAdd: Boolean = false){
+    private fun updateData(isAdd: Boolean = false, keyword_kensaku: String = "ランチ"){// 初期値はランチ
         if (isLoading){
             return
         } else {
@@ -138,19 +139,19 @@ class ApiFragment: Fragment() {
         val start = page * COUNT + 1
 
         // URLを作成
-        var keyword_kensaku = "ランチ" // 初期値はランチ
+        /*var keyword_kensaku = "ランチ"
 
         if (editTextKeyword.text.toString() != null) {
             keyword_kensaku = editTextKeyword.text.toString()
-        }
+        }*/
 
         val url = StringBuilder()
             .append(getString(R.string.base_url)) // https://webservice.recruit.co.jp/hotpepper/gourmet/v1/
             .append("?key=").append(getString(R.string.api_key)) // Apiを使うためのApikey
             .append("&start=").append(1) // 何件目からデータを取得するか
             .append("&count=").append(COUNT) // 1回で20件取得する
-            .append("&keyword=").append(getString(R.string.api_keyword)) // お店の検索ワード。
-            //.append("&keyword=").append(keyword_kensaku) // 入力した検索ワードを適用
+            //.append("&keyword=").append(getString(R.string.api_keyword)) // お店の検索ワード。
+            .append("&keyword=").append(keyword_kensaku) // 入力した検索ワードを適用
             .append("&format=json") // ここで利用しているAPIは戻りの形をxmlかjsonか選択することができる。Androidで扱う場合はxmlよりもjsonの方が扱いやすいので、jsonを選択
             .toString()
 

@@ -14,7 +14,8 @@ import com.squareup.picasso.Picasso
 class FavoriteAdapter(private val context: Context): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     // お気に入り登録したShopを格納
-    private val items = mutableListOf<FavoriteShop>()
+    private val items_all = mutableListOf<FavoriteShop>()
+    private val items = items_all.filter { !it.default_flag }.toMutableList() // it.default_flag == falseと同じ
 
     // お気に入り画面から削除するときのコールバック（ApiFragmentへ通知するメソッド)
     var onClickDeleteFavorite: ((FavoriteShop) -> Unit)? = null
@@ -27,6 +28,8 @@ class FavoriteAdapter(private val context: Context): RecyclerView.Adapter<Recycl
         items.apply {
             clear() // itemsを空にする
             addAll(list) // itemsにlistを全て追加する
+            //Log.d("kotlintest",list)
+            Log.d("kotlintest_refresh", list.filter{ !it.default_flag }.toString())
         }
 
         notifyDataSetChanged() // recyclerViewを再描画させる

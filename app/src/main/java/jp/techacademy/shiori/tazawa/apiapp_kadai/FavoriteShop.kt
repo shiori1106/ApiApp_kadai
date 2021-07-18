@@ -1,6 +1,5 @@
 package jp.techacademy.shiori.tazawa.apiapp_kadai
 
-import android.util.Log
 import io.realm.Realm
 import io.realm.RealmObject
 import io.realm.annotations.PrimaryKey
@@ -21,6 +20,7 @@ open class FavoriteShop: RealmObject() {
         fun findAll(): List<FavoriteShop> =
                 Realm.getDefaultInstance().use { realm ->
                     realm.where(FavoriteShop::class.java)
+                            .equalTo(FavoriteShop::default_flag.name, false)
                             .findAll().let {
                                 realm.copyFromRealm(it)
                             }
@@ -42,7 +42,6 @@ open class FavoriteShop: RealmObject() {
             return(target?.let {
                 realm.copyFromRealm(it)
             })
-            Log.d("kolintest","findbyが呼び出された")
             realm.close()
         }
 
@@ -76,29 +75,11 @@ open class FavoriteShop: RealmObject() {
         fun insert(favoriteShop: FavoriteShop) {
 
             // idがお気に入りに登録されていない場合は登録
-            Log.d("kotlintest_追加",favoriteShop.id.toString())
-            Log.d("kotlintest_追加",favoriteShop.default_flag.toString())
-            // isFavorite = findBy(favoriteShop.id) != null //???
-            //Log.d("kotelintest_追加",isFavorite.toString())
-
             if (findBy(favoriteShop.id) == null) {
-            //if (isFavorite) {
-
-                // 一時的にデータ取得用
-                var realm = Realm.getDefaultInstance()
-                realm.where(FavoriteShop::class.java)
-                        .findAll().forEach {
-                            Log.d("kotlintest_data_追加","${it.id} + ${it.name} + ${it.default_flag}")
-                        }
-
-
-
 
                 Realm.getDefaultInstance().executeTransaction {
                     it.insertOrUpdate(favoriteShop)
-                    Log.d("kotlintest_追加","nullだったので登録したよ")
-                    Log.d("kotlintest_追加",favoriteShop.default_flag.toString())
-                }
+               }
 
             } else {
                 // idがお気に入りに登録されている場合は、default_flagをfalseに
@@ -111,7 +92,6 @@ open class FavoriteShop: RealmObject() {
                                 }
                             }
                 }
-                Log.d("kolintest_追加","trueからfalseにしたよ")
             }
         }
 
@@ -140,22 +120,13 @@ open class FavoriteShop: RealmObject() {
                         .equalTo(FavoriteShop::id.name, id)
                         .findFirst()
 
-            Log.d("kotlintest_削除", target?.default_flag.toString())
 
             realm.executeTransaction {
                 target?.default_flag = true
             }
 
-            realm.where(FavoriteShop::class.java)
-                    .findAll().forEach {
-                        Log.d("kotlintest_data_削除","${it.id} + ${it.name} + ${it.default_flag}")
-                    }
-
             realm.close()
 
-            Log.d("kotlintest_削除",target?.id.toString())
-            Log.d("kotlintest_削除",target?.default_flag.toString())
-            Log.d("kotlintest_削除","削除したのでtrueにしたよ")
         }
 
 

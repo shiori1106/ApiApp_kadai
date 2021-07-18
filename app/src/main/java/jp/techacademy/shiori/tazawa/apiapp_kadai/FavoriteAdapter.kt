@@ -1,7 +1,6 @@
 package jp.techacademy.shiori.tazawa.apiapp_kadai
 
 import android.content.Context
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,8 +13,7 @@ import com.squareup.picasso.Picasso
 class FavoriteAdapter(private val context: Context): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     // お気に入り登録したShopを格納
-    private val items_all = mutableListOf<FavoriteShop>()
-    private val items = items_all.filter { !it.default_flag }.toMutableList() // it.default_flag == falseと同じ
+    private val items = mutableListOf<FavoriteShop>()
 
     // お気に入り画面から削除するときのコールバック（ApiFragmentへ通知するメソッド)
     var onClickDeleteFavorite: ((FavoriteShop) -> Unit)? = null
@@ -28,8 +26,6 @@ class FavoriteAdapter(private val context: Context): RecyclerView.Adapter<Recycl
         items.apply {
             clear() // itemsを空にする
             addAll(list) // itemsにlistを全て追加する
-            //Log.d("kotlintest",list)
-            Log.d("kotlintest_refresh", list.filter{ !it.default_flag }.toString())
         }
 
         notifyDataSetChanged() // recyclerViewを再描画させる
@@ -78,9 +74,7 @@ class FavoriteAdapter(private val context: Context): RecyclerView.Adapter<Recycl
             // Picassoというライブラリを使ってImageVIewに画像をはめ込む
             Picasso.get().load(data.imageUrl).into(imageView)
             favoriteImageView.setOnClickListener {
-                Log.d("kotlintest_before",data.default_flag.toString())
                 onClickDeleteFavorite?.invoke(data)
-                Log.d("kotlintest_after",data.default_flag.toString())
                 notifyItemChanged(position)
             }
         }

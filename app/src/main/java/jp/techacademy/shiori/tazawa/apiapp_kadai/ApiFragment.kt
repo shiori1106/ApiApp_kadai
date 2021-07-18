@@ -7,6 +7,7 @@ import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -108,6 +109,20 @@ class ApiFragment: Fragment() {
 
         }
 
+        // 更新ボタンを押した場合の処理
+        update_button.setOnClickListener { v ->
+
+            // 新しいキーワードでデータを取得して更新
+            isLoading = false
+            updateData()
+
+            // キーボードが出てたら閉じる
+            val im = activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            im.hideSoftInputFromWindow(v.windowToken, InputMethodManager.HIDE_NOT_ALWAYS)
+
+
+        }
+
         swipeRefreshLayout.setOnRefreshListener {
             updateData()
         }
@@ -137,19 +152,21 @@ class ApiFragment: Fragment() {
         val start = page * COUNT + 1
 
         // URLを作成
-        /*var keyword_kensaku = "ランチ"
+        var keyword_kensaku = "ランチ"
 
-        if (keyword_kensaku != null) {
+        if (editTextKeyword.text.length == 0){
+
+        }else{
             keyword_kensaku = editTextKeyword.text.toString()
-        }*/
+        }
 
         val url = StringBuilder()
             .append(getString(R.string.base_url)) // https://webservice.recruit.co.jp/hotpepper/gourmet/v1/
             .append("?key=").append(getString(R.string.api_key)) // Apiを使うためのApikey
             .append("&start=").append(1) // 何件目からデータを取得するか
             .append("&count=").append(COUNT) // 1回で20件取得する
-            .append("&keyword=").append(getString(R.string.api_keyword)) // お店の検索ワード。
-            //.append("&keyword=").append(url_keyword) // 入力した検索ワードを適用
+            //.append("&keyword=").append(getString(R.string.api_keyword)) // お店の検索ワード。
+            .append("&keyword=").append(keyword_kensaku) // 入力した検索ワードを適用
             .append("&format=json") // ここで利用しているAPIは戻りの形をxmlかjsonか選択することができる。Androidで扱う場合はxmlよりもjsonの方が扱いやすいので、jsonを選択
             .toString()
 
@@ -168,7 +185,6 @@ class ApiFragment: Fragment() {
         client.newCall(request).enqueue(object: Callback {
             // Error時の処理
             override fun onFailure(call: Call, e: IOException){
-
                 e.printStackTrace()
                 handler.post{
                     updateRecyclerView(listOf())
@@ -189,6 +205,7 @@ class ApiFragment: Fragment() {
             }
         })
     }
+
 
     // 画面が戻った時に更新する
     override fun onResume() {

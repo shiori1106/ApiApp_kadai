@@ -10,6 +10,7 @@
     <string name="api_key">1d97f983f504869c</string>
     <string name="api_keyword">ランチ</string>
     <string name="hint_keyword">検索ワードを入力してください</string>
+    <string name="text_button">更新</string>
 
     <!--Favorite関連-->
     <string name="delete_favorite_dialog_title">お気に入りの削除</string>
